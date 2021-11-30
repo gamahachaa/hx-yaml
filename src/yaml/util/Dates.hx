@@ -36,7 +36,11 @@ class Dates
 		#elseif flash
 		return untyped _global["Date"];
 		#elseif js
-		return untyped __js__("Date");
+			#if haxe4
+			return js.Syntax.code("Date");
+			#else
+			return untyped __js__("Date");
+			#end
 		#end
 		return null;
 	}
@@ -54,6 +58,11 @@ class Dates
 	public static function toISOString(date:Date):String
 	{
 		var NativeDate = getNativeDate();
+			#if haxe4
+			var d = js.Syntax.construct(NativeDate, date.getTime());
+			#else
+			var d = untyped __new__(NativeDate, date.getTime());
+			#end
 		var d = untyped __new__(NativeDate, date.getTime());
 
 		return d.getUTCFullYear() + '-'
